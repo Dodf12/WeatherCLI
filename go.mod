@@ -1,4 +1,4 @@
-module weatherCLI
+module WeatherCLI
 
 go 1.22.4
 
