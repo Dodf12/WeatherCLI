@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 )
 
 type Kind int
@@ -318,7 +319,12 @@ func displayArt(weatherType string, temp float32, tempUnit string, description s
 	// Get the picture for the weather type
 	if weatherInfo, ok := weatherData[weatherType]; ok {
 		if picture, ok := weatherInfo["picture"]; ok {
-			fmt.Printf("%s%s%s\n", weatherColor, picture, reset)
+			// Split the picture into lines and color each line separately
+			// to prevent ANSI codes from interfering with ASCII art characters
+			lines := strings.Split(picture, "\n")
+			for _, line := range lines {
+				fmt.Printf("%s%s%s\n", weatherColor, line, reset)
+			}
 		}
 	}
 
