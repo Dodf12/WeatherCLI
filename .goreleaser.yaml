@@ -1,0 +1,87 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+
+# The lines below are called `modelines`. See `:help modeline`
+# Feel free to remove those if you don't want/need to use them.
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 2
+
+project_name: weatherCLI
+
+before:
+  hooks:
+  # You may remove this if you don't use go modules.
+  - go mod tidy
+  # you may remove this if you don't need go generate
+  - go generate ./...
+
+builds:
+- env:
+  - CGO_ENABLED=0
+  goos:
+  - linux
+  - windows
+  - darwin
+  goarch:
+  - amd64
+  - arm64
+  - "386"
+  ignore:
+  - goos: windows
+    goarch: arm64
+
+archives:
+- name_template: >-
+    {{ .ProjectName }}_ {{- title .Os }}_ {{- if eq .Arch "amd64" }}x86_64 {{- else if eq .Arch "386" }}i386 {{- else }}{{ .Arch }}{{ end }} {{- if .Arm }}v{{ .Arm }}{{ end }}
+  format_overrides:
+  - goos: windows
+    format: zip
+  files:
+  - LICENSE
+  - README*
+  - designs/**
+
+nfpms:
+- package_name: weathercli
+  file_name_template: "{{ .ConventionalFileName }}"
+  homepage: https://github.com/Dodf12/weatherCLI
+  description: "A CLI tool to get weather information for any city with ASCII art"
+  maintainer: Your Name <your.email@example.com>
+  license: MIT
+  formats:
+  - deb
+  - rpm
+  - apk
+  bindir: /usr/bin
+  contents:
+  - src: designs/
+    dst: /usr/share/weathercli/designs
+    type: dir
+
+brews:
+- repository:
+    owner: Dodf12
+    name: homebrew-weathercli
+  commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+  homepage: https://github.com/Dodf12/weatherCLI
+  description: "A CLI tool to get weather information for any city with ASCII art"
+  license: MIT
+  skip_upload: false
+  test: |
+    system "#{bin}/weatherCLI city --name Chicago"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - "^docs:"
+    - "^test:"
+
+release:
+  footer: >-
+    
+    ---
+
+    Released by [GoReleaser](https://github.com/goreleaser/goreleaser).
