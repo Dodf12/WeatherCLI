@@ -4,7 +4,7 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 */
 package main
 
-import "WeatherCLI/cmd"
+import "github.com/Dodf12/WeatherCLI/cmd"
 
 func main() {
 	cmd.Execute()
