@@ -1,4 +1,4 @@
-module WeatherCLI
+module github.com/Dodf12/WeatherCLI
 
 go 1.22.4
 
@@ -7,5 +7,3 @@ require (
 	github.com/spf13/cobra v1.10.2 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
 )
-
-
